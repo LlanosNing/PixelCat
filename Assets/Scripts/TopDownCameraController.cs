@@ -41,9 +41,6 @@ public class TopDownCameraController : MonoBehaviour
     [Tooltip("Enable vertical rotation (camera angle adjustment)")]
     public bool enableVerticalRotation = false;
 
-    [Tooltip("Mouse button to hold for rotation (0=Left, 1=Right, 2=Middle)")]
-    public int rotationMouseButton = 1;
-
     [Tooltip("Mouse sensitivity for rotation")]
     public float mouseSensitivity = 3f;
 
@@ -131,28 +128,24 @@ public class TopDownCameraController : MonoBehaviour
         if (!enableMouseRotation)
             return;
 
-        // Check if rotation mouse button is held
-        if (Input.GetMouseButton(rotationMouseButton))
+        // Get mouse movement directly without button check
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+
+        // Apply inversion
+        if (invertX) mouseX = -mouseX;
+        if (invertY) mouseY = -mouseY;
+
+        // Update target rotation
+        targetYaw += mouseX;
+
+        // Only apply vertical rotation if enabled
+        if (enableVerticalRotation)
         {
-            // Get mouse movement
-            float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-            float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+            targetPitch -= mouseY; // Subtract because screen Y is inverted
 
-            // Apply inversion
-            if (invertX) mouseX = -mouseX;
-            if (invertY) mouseY = -mouseY;
-
-            // Update target rotation
-            targetYaw += mouseX;
-
-            // Only apply vertical rotation if enabled
-            if (enableVerticalRotation)
-            {
-                targetPitch -= mouseY; // Subtract because screen Y is inverted
-
-                // Clamp pitch to min/max angle
-                targetPitch = Mathf.Clamp(targetPitch, minAngle, maxAngle);
-            }
+            // Clamp pitch to min/max angle
+            targetPitch = Mathf.Clamp(targetPitch, minAngle, maxAngle);
         }
 
         // Smooth rotation
