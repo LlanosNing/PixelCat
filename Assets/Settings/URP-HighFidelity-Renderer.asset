@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    targetHeight: 197
-    colorSteps: 15
+    targetHeight: 187
+    colorSteps: 14
     ditherStrength: 0.01
     renderPassEvent: 550
     sharpness: 1
